@@ -8,35 +8,26 @@ namespace CompiledFileFetcherUI
     {
 
         //INIT
-        public Form1()
-        {
-            InitializeComponent();
-        }
+        public Form1(){InitializeComponent();}
 
         private async void Form1_Load(object sender, EventArgs e)
         {
             List<string> listTest = await Program2.GetDefaultLink();
             AllocConsole();
 
-            foreach (String item in listTest)
-            {
-                DropDown.Items.Add(item);
-            }
+            foreach (String item in listTest) {DropDown.Items.Add(item);}
         }
 
         [DllImport("kernel32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
+
         static extern bool AllocConsole();
 
-        private async void Fetch_Click(object sender, EventArgs e)
-        {
-            await Program2.Main(DropDown.Text, GetLatestDev.Checked);
-            //MessageBox.Show(comboBox1.Text);
-        }
+        // Handle Fetch Button Click
+        private async void Fetch_Click(object sender, EventArgs e) {await Program2.Main(DropDown.Text, GetLatestDev.Checked);}
 
-        private void GetLatestDev_CheckedChanged(object sender, EventArgs e)
-        {
-        }
+        // Handle Dev CheckBox Changed
+        private void GetLatestDev_CheckedChanged(object sender, EventArgs e) {}
     }
 
 
@@ -49,7 +40,6 @@ namespace CompiledFileFetcherUI
             //URL of the website you want to fetch HTML from
             string url = "http://devapp3.echo.services/packages/" + category;
             Console.WriteLine(url);
-
 
             // Create an instance of HttpClient
             using (HttpClient client = new HttpClient())
@@ -67,7 +57,7 @@ namespace CompiledFileFetcherUI
 
                         // Regular expression pattern to match href attributes containing '.zip'
                         string pattern = "<a\\s+(?:[^>]*?\\s+)?href=\"([^\"]*\\.[^\"]*)\"";
-                        ;
+                        // ;
 
                         // Extract URLs and their corresponding dates using regular expressions
                         Dictionary<DateTime, string> zipFiles = new Dictionary<DateTime, string>();
@@ -80,10 +70,12 @@ namespace CompiledFileFetcherUI
                             match2.Value.ToString();
                             //Console.WriteLine(match2.Value.ToString());
                         }
+
                         int maxLinks = matches.Count;
                         int x = 1;
-                        DateTime greatestDate = DateTime.MinValue;
                         string latestLink = "";
+                        DateTime greatestDate = DateTime.MinValue;
+
                         while (x < matches.Count)
                         {
                             //Console.WriteLine(matches[x].Value.ToString());
@@ -113,19 +105,20 @@ namespace CompiledFileFetcherUI
 
                         int length = latestLink.Length;
                         latestLink = latestLink.Substring(9, length - 10);
+
+                        //Diags
                         Console.WriteLine(greatestDate + " UTC");
                         Console.WriteLine(latestLink);
                         System.Diagnostics.Process.Start("explorer.exe", url + latestLink);
 
                     }
                 }
-                catch (Exception ex)
-                {
-                    // Print any exception that occurred
-                    Console.WriteLine($"An error occurred: {ex.Message}");
-                }
+               catch (Exception ex) {Console.WriteLine($"An error occurred: {ex.Message}"); }  // Print any exception that occurred
             }
         }
+
+
+
         static public async Task<List<string>> GetDefaultLink()
         {
             using (HttpClient client = new HttpClient())
@@ -156,16 +149,9 @@ namespace CompiledFileFetcherUI
                         return compiledCategories;
                     }
                 }
-
-                catch (Exception ex)
-                {
-                    // Print any exception that occurred
-                    Console.WriteLine($"An error occurred: {ex.Message}");
-                }
+                catch (Exception ex) {Console.WriteLine($"An error occurred: {ex.Message}");} // Print any exception that occurred
             }
-            return new List<string>();
+          return new List<string>();
         }
     }
-
-
 }
