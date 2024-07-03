@@ -13,6 +13,8 @@ namespace CompiledFileFetcherUI
         private async void Form1_Load(object sender, EventArgs e)
         {
             List<string> listTest = await Program2.GetDefaultLink();
+            
+            
             AllocConsole();
 
             foreach (String item in listTest) {DropDown.Items.Add(item);}
@@ -38,7 +40,7 @@ namespace CompiledFileFetcherUI
             //String category = await GetDefaultLink();
 
             //URL of the website you want to fetch HTML from
-            string url = "http://devapp3.echo.services/packages/" + category;
+            string url = "http://devapp3.echo.services/packages/" + category + "/";
             Console.WriteLine(url);
 
             // Create an instance of HttpClient
@@ -56,11 +58,12 @@ namespace CompiledFileFetcherUI
                         string htmlContent = await response.Content.ReadAsStringAsync();
 
                         // Regular expression pattern to match href attributes containing '.zip'
-                        string pattern = "<a\\s+(?:[^>]*?\\s+)?href=\"([^\"]*\\.[^\"]*)\"";
+                        //string pattern = "<a\\s+(?:[^>]*?\\s+)?href=\"([^\"]*\\.[^\"]*)\"";
                         // ;
 
                         // Extract URLs and their corresponding dates using regular expressions
                         Dictionary<DateTime, string> zipFiles = new Dictionary<DateTime, string>();
+                        string pattern = @"((?<=<a href=.)Deploy_.+zip(?=.>))(?:.+)((?<=\s)[0-9]{2}-[a-z]{3}-[0-9]{4}\s[0-9]{2}:[0-9]{2})";
                         MatchCollection matches = Regex.Matches(htmlContent, pattern, RegexOptions.IgnoreCase);
 
                         string pattern2 = @"\d{2}-\w{3}-\d{4} \d{2}:\d{2}";
@@ -117,8 +120,6 @@ namespace CompiledFileFetcherUI
             }
         }
 
-
-
         static public async Task<List<string>> GetDefaultLink()
         {
             using (HttpClient client = new HttpClient())
@@ -135,17 +136,16 @@ namespace CompiledFileFetcherUI
                         string htmlContent = await response.Content.ReadAsStringAsync();
 
                         // Regular expression pattern to match href attributes containing '.zip'
-                        string pattern = "<a\\s+(?:[^>]*?\\s+)?href=\"([^\"]*(?<!\\.json))\"";
+                        string pattern = @"(?<=<a href=.)([a-z]+(Behaviours))(?=\/)";
+
                         MatchCollection matches = Regex.Matches(htmlContent, pattern, RegexOptions.IgnoreCase);
                         List<string> compiledCategories = new List<string>();
 
                         foreach (Match match in matches)
                         {
-                            String link = match.ToString();
-                            int length = link.Length;
-                            String test = link.Substring(9, length - 10);
-                            compiledCategories.Add(test);
+                            compiledCategories.Add(match.ToString());
                         }
+                        compiledCategories.Add("MaldonWebsite");
                         return compiledCategories;
                     }
                 }
