@@ -56,6 +56,8 @@
             // GetLatestDev
             // 
             GetLatestDev.AutoSize = true;
+            GetLatestDev.Checked = true;
+            GetLatestDev.CheckState = CheckState.Checked;
             GetLatestDev.Location = new Point(14, 63);
             GetLatestDev.Margin = new Padding(3, 4, 3, 4);
             GetLatestDev.Name = "GetLatestDev";
@@ -63,7 +65,7 @@
             GetLatestDev.TabIndex = 3;
             GetLatestDev.Text = "Get Latest Dev";
             GetLatestDev.UseVisualStyleBackColor = true;
-            GetLatestDev.CheckedChanged += GetLatestDev_CheckedChanged;
+           // GetLatestDev.CheckedChanged += GetLatestDev_CheckedChanged;
             // 
             // Form1
             // 
