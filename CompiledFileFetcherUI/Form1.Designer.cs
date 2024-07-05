@@ -32,19 +32,22 @@
             DropDown = new ComboBox();
             Fetch = new Button();
             GetLatestDev = new CheckBox();
+            Clients = new ComboBox();
             SuspendLayout();
             // 
             // DropDown
             // 
-            DropDown.Location = new Point(14, 16);
+            DropDown.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            DropDown.Location = new Point(12, 52);
             DropDown.Margin = new Padding(3, 4, 3, 4);
             DropDown.Name = "DropDown";
             DropDown.Size = new Size(258, 28);
             DropDown.TabIndex = 2;
+            DropDown.Text = "Contract";
             // 
             // Fetch
             // 
-            Fetch.Location = new Point(186, 57);
+            Fetch.Location = new Point(186, 88);
             Fetch.Margin = new Padding(3, 4, 3, 4);
             Fetch.Name = "Fetch";
             Fetch.Size = new Size(86, 31);
@@ -58,20 +61,31 @@
             GetLatestDev.AutoSize = true;
             GetLatestDev.Checked = true;
             GetLatestDev.CheckState = CheckState.Checked;
-            GetLatestDev.Location = new Point(14, 63);
+            GetLatestDev.Location = new Point(14, 94);
             GetLatestDev.Margin = new Padding(3, 4, 3, 4);
             GetLatestDev.Name = "GetLatestDev";
             GetLatestDev.Size = new Size(127, 24);
             GetLatestDev.TabIndex = 3;
             GetLatestDev.Text = "Get Latest Dev";
             GetLatestDev.UseVisualStyleBackColor = true;
-           // GetLatestDev.CheckedChanged += GetLatestDev_CheckedChanged;
+            // 
+            // Clients
+            // 
+            Clients.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            Clients.Location = new Point(12, 13);
+            Clients.Margin = new Padding(3, 4, 3, 4);
+            Clients.Name = "Clients";
+            Clients.Size = new Size(258, 28);
+            Clients.TabIndex = 4;
+            Clients.Text = "Client";
+            Clients.SelectedIndexChanged += Clients_SelectedIndexChanged;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(302, 103);
+            ClientSize = new Size(302, 132);
+            Controls.Add(Clients);
             Controls.Add(GetLatestDev);
             Controls.Add(Fetch);
             Controls.Add(DropDown);
@@ -88,5 +102,6 @@
         private Button Fetch;
         public ComboBox DropDown;
         public CheckBox GetLatestDev;
+        public ComboBox Clients;
     }
 }

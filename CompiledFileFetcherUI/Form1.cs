@@ -1,4 +1,5 @@
 using System.Runtime.InteropServices;
+
 using System.Security.Policy;
 using System.Text.RegularExpressions;
 using System.Runtime;
@@ -10,27 +11,51 @@ namespace CompiledFileFetcherUI
 {
     public partial class Form1 : Form
     {
+        List<string> ClientList = new List<string> { "BrysonUK", "SuezUK", "SuezAUS", "Cardiff", "Cleanaway", "VeoliaAUS", "VeoliaUK", "VeoliaFR" };
 
         //INIT
-        public Form1() { InitializeComponent(); }
-
-        private async void Form1_Load(object sender, EventArgs e)
+        public Form1()
         {
-            List<string> BehaviorList = await Program2.GetDefaultLink();
-         //   AllocConsole();
-            foreach (String item in BehaviorList) { DropDown.Items.Add(item); }
+            InitializeComponent();
+
+            //Populate Client Filter
+            foreach (String client in ClientList)
+            { Clients.Items.Add(client); }
         }
 
-        //[DllImport("kernel32.dll", SetLastError = true)]
-       // [return: MarshalAs(UnmanagedType.Bool)]
+        private void Form1_Load(object sender, EventArgs e)
+        {
 
-      //  static extern bool AllocConsole();
+        }
+
 
         // Handle Fetch Button Click
         private async void Fetch_Click(object sender, EventArgs e) { await Program2.Main(DropDown.Text, GetLatestDev.Checked); }
 
         // Handle Dev CheckBox Changed
         private void GetLatestDev_CheckedChanged(object sender, EventArgs e) { }
+        
+        //Handle Client Selected
+        private async void Clients_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            //Start Fresh
+            DropDown.SelectedItem = "";
+            DropDown.Text = "Contract";
+            DropDown.Items.Clear();
+
+            //Populate Contracts
+            List<string> BehaviorList = await Program2.GetDefaultLink();
+
+            foreach (String contract in BehaviorList)
+            {
+                string pContract = contract.ToLower();
+                string pClient = Clients.SelectedItem.ToString().ToLower();
+
+                if (pContract.Contains(pClient) || (pClient.Contains("suezuk") && pContract.Contains("maldon")))
+                    { DropDown.Items.Add(contract);
+                }
+            }
+        }
     }
 
 
@@ -63,11 +88,12 @@ namespace CompiledFileFetcherUI
 
                         return behaviorLinks;
                     }
-                    else {
-                  
+                    else
+                    {
+
                         MessageBox.Show("Please Check Your Connection & VPNs and Try Again");
                     }
-                   
+
                 }
                 catch (Exception ex) { Console.WriteLine($"An error occurred: {ex.Message}"); } // Print any exception that occurred
             }
@@ -76,11 +102,11 @@ namespace CompiledFileFetcherUI
 
         public static async Task Main(String category, Boolean devOnly)
         {
-          //  String category = await GetDefaultLink();
+            //  String category = await GetDefaultLink();
 
             //URL of the website you want to fetch HTML from
             string url = "http://devapp3.echo.services/packages/" + category + "/";
-           // Console.WriteLine(url);
+            // Console.WriteLine(url);
 
             // Create an instance of HttpClient
             using (HttpClient client = new HttpClient())
@@ -110,15 +136,17 @@ namespace CompiledFileFetcherUI
                             if (devOnly && (!match.Value.Contains("fef260e9") && !match.Value.Contains("f9c24f45"))) { continue; } //Skip Non-Dev Branches
 
                             DateTime testDate = DateTime.ParseExact(match.Groups[2].Value, "dd-MMM-yyyy HH:mm", System.Globalization.CultureInfo.InvariantCulture);
-                            if (testDate >= latestDate) {
-                                latestDate = testDate; 
-                                latestLink = match.Groups[1].Value.ToString(); 
+                            if (testDate >= latestDate)
+                            {
+                                latestDate = testDate;
+                                latestLink = match.Groups[1].Value.ToString();
                             }
                         }
 
                         //Message to User about Found Builds
-                        if (latestDate.Date != DateTime.Now.Date) {
-                            MessageBox.Show("Downloading Build: " + latestLink + Environment.NewLine + "Built On: " + latestDate); 
+                        if (latestDate.Date != DateTime.Now.Date)
+                        {
+                            MessageBox.Show("Downloading Build: " + latestLink + Environment.NewLine + "Built On: " + latestDate);
                         }
 
                         //AutoDownload
